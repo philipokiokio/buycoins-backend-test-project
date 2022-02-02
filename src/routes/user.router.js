@@ -7,17 +7,10 @@ const { jwtPassport }= require('../utils/passport');
 const Token = require('../models/user.token.mongo');
 const { sendEmail } = require('../services/mailer');
 const crypto = require("crypto");
-
+const sessionStorage = require('sessionstorage-for-nodejs');
+const ip = require('ip');
 
 jwtPassport(passport);
-
-
-
-
-
-
-
-
 
 
 
@@ -104,6 +97,7 @@ userRouter.post('/login', function(req,res){
         if (err) throw err;
   
         if(!user){
+            // console.log(user)
             res.status(401).json({
                 success: false, 
                 message: 'Authentication failed. User not found'
@@ -111,19 +105,22 @@ userRouter.post('/login', function(req,res){
         } else{
             // check of password matches
             user.comparePassword(req.body.password, function(err, isMatch){
-                console.log(isMatch)
+                // console.log(isMatch)
                 if (isMatch && !err){
                     // if user is found and password is right create a token
                     
                     
                     
                     const token = jwt.sign({user}, process.env.secret );
+                    sessionStorage.setItem('tokenId',`JWT${token}`);
+                   
                     // retrun the information including the token
                     return res.status(200).json({
                         success:true, 
                         'token': 'JWT' + token,
                         status: res.statusCode,
                         method: req.method,
+                        ip:req.socket.localAddress,
                         data: user
 
                     });
@@ -178,10 +175,11 @@ userRouter.post('/user/verify/:id/:userToken/', async (req,res)=>{
                method: req.method,
                status: res.statusCode,
                message: 'Token verification link invalid'
+
            })
        }
        let x = await users.findOneAndUpdate({_id: user._id}, {verified:true}, {upsert:true})
-       console.log(x);
+    //    console.log(x);
        await Token.findByIdAndRemove(token_._id);
 
        return res.status(200).json({
@@ -199,7 +197,7 @@ userRouter.post('/user/verify/:id/:userToken/', async (req,res)=>{
 
 
 
-})
+});
 
 
 

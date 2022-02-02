@@ -1,12 +1,19 @@
 const fetch = require('node-fetch');
 require('dotenv').config();
 const { uuidv4 } = require('../utils/transaction.tools');
-
-
+const sessionStorage = require('sessionstorage-for-nodejs');
+const { decode } = require('jwt-decode');
+const bcrypt = require('bcrypt');
+const ip = require('ip');
 
 const circleApiPayments = `${process.env.CIRCLE_API}/payments`;
 const apiKey = process.env.CIRCLE_API_KEY;
 const publicEncrypt = `${process.env.CIRCLE_API}/encryption/public`
+
+
+
+const hashID = bcrypt.hashSync(decode(sessionStorage.tokenId)._id,10);
+console.log(hashID);
 
 
 async function publicEncryption(){
@@ -29,6 +36,8 @@ async function publicEncryption(){
     
                 
 
+
+
                 
 
     return data
@@ -50,13 +59,13 @@ async function createPayment(){
         },
         body:JSON.stringify({
             metadata: {
-                email: placeHolder,
+                email: decode(sessionStorage(token).email),
                 phoneNumber: placeHolder,
                 ipAddress: placeHolder,
-                sessionId: placeHolder
+                sessionId: hashID
             },
             amount:{
-                amount: '300',
+                amount: placeholder,
                 currency: 'USD'
             },
             autoCapture:true,

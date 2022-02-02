@@ -21,15 +21,19 @@
     "get-random-values": "^1.2.2",
     "graphql": "^16.2.0",
     "handlebars": "^4.7.7",
+    "ip": "^1.1.5",
     "joi": "^17.5.0",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
     "mongoose": "^6.1.7",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.7",
     "nodemailer": "^6.7.2",
     "nodemailer-smtp-transport": "^2.7.4",
+    "openapi": "^1.0.1",
     "passport": "^0.5.2",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "sessionstorage-for-nodejs": "^1.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
